@@ -11,9 +11,7 @@
         --white-color: #fff;
         --primary-color: #002a5a;
         --secondary-color: #0053b2;
-        --tertiary-color: #63afdd;
         --footer-color: #192e40;
-        --background-color: #e3edf7;
         --site-max-width: 1300px;
         --font-size-l: 1.5rem;
       }
@@ -23,13 +21,22 @@
         padding: 0;
         font-family: "Montserrat", sans-serif;
       }
+      html,
+      body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      main {
+        flex: 1;
+      }
       a {
         text-decoration: none;
       }
       .section-content {
         max-width: var(--site-max-width);
         margin: 0 auto;
-        padding: 0 2rem;
+        padding: 0rem 2rem;
       }
       header {
         background-color: var(--primary-color);
@@ -39,6 +46,112 @@
         align-items: center;
         padding: 20px;
         gap: 10px;
+        text-align: center;
+      }
+
+      .section-content .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 30px;
+        padding: 2rem;
+      }
+      .section-content .grid-container .card {
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 80px;
+        height: 40px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+        border-radius: 40px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 30px;
+        width: 30px;
+        left: 8px;
+        bottom: 5px;
+        background-color: #fff;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+        border-radius: 40px;
+      }
+      input:checked + .slider {
+        background-color: #2196f3;
+      }
+      input:checked + .slider:before {
+        -webkit-transform: translateX(30px);
+        -ms-transform: translateX(30px);
+        transform: translateX(30px);
+      }
+      .title {
+        font-size: var(--font-size-l);
+        font-weight: bold;
+      }
+      .ledOn {
+        color: green;
+      }
+      .ledOff {
+        color: red;
+      }
+      .grid-container .temp-umid-card {
+        color: var(--secondary-color);
+      }
+      .grid-container .light-card {
+        color: green;
+      }
+      input[type="range"] {
+        width: 100%;
+        margin: 10px 0;
+        border-radius: 20px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: #ddd;
+        height: 10px;
+        cursor: pointer;
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: green;
+        cursor: pointer;
+      }
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: green;
+        cursor: pointer;
       }
       .footer-section {
         background-color: var(--footer-color);
@@ -60,10 +173,11 @@
       .footer-section .social-link-list .social-link {
         font-size: var(--font-size-l);
       }
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 820px) {
         .footer-section .section-content {
           flex-direction: column;
           gap: 10px;
+          text-align: center;
         }
       }
     </style>
@@ -75,17 +189,56 @@
     </header>
     <main>
       <section class="section-content">
-        <!-- CARD LED -->
-        <div class="card card-switch" id="cardLED18">
-          <p>
-            <i class="fas fa-lightbulb fa-2x ledOff" id="iconLED18"></i>
-            <strong>(LED) 18</strong>
-          </p>
-          <p>GPIO state: <strong id="estadoLED18">OFF</strong></p>
-          <label class="switch">
-            <input type="checkbox" onchange="toggleLed(18, this)" id="led18" />
-            <span class="slider"></span>
-          </label>
+        <div class="grid-container">
+          <!-- CARD LED -->
+          <div class="card">
+            <p>
+              <i class="fas fa-lightbulb fa-2x ledOff" id="iconLED18"></i>
+              <strong class="title">(LED) 18</strong>
+            </p>
+            <p>GPIO state: <strong id="estadoLED18">Carregando...</strong></p>
+            <label class="switch">
+              <input type="checkbox" onchange="toggleLed(this)" id="led18" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Temperatura -->
+          <div class="card temp-umid-card">
+            <p>
+              <i class="fas fa-thermometer-half fa-2x"></i>
+              <strong class="title">Temperatura</strong>
+            </p>
+            <p class="title"><span>Carregando...</span>°C</p>
+          </div>
+
+          <!-- Umidade -->
+          <div class="card temp-umid-card">
+            <p>
+              <i class="fas fa-water fa-2x"></i>
+              <strong class="title">Umidade</strong>
+            </p>
+            <p class="title"><span>Carregando...</span>%</p>
+          </div>
+
+          <!-- Luz (LDR) -->
+          <div class="card light-card">
+            <p>
+              <i class="fas fa-sun fa-2x"></i>
+              <strong class="title">Luz</strong>
+            </p>
+            <p class="title"><span>Carregando...</span></p>
+          </div>
+
+          <!-- PWM -->
+          <div class="card light-card">
+            <p>
+              <i class="fas fa-sun fa-2x"></i>
+              <strong class="title">PWM</strong>
+            </p>
+            <input type="range" id="pwmSlider" min="0" max="255" value="0" oninput="setPWM(this.value)" />
+            <p class="title"><span id="pwmValue">0</span></p>
+          </div>
         </div>
       </section>
     </main>
@@ -107,6 +260,9 @@
     </footer>
 
     <script>
+      function setPWM(value) {
+        document.getElementById("pwmValue").innerText = value;
+      }
       function atualizarEstado(estado) {
         const estadoLED = document.getElementById("estadoLED18");
         const iconLED = document.getElementById("iconLED18");
@@ -116,22 +272,43 @@
         document.getElementById("led18").checked = estado === "on";
       }
       async function atualizarStatus() {
-        const response = await fetch("/status");
-        const data = await response.text();
-        atualizarEstado(data);
+        try {
+          const response = await fetch("/status");
+          const data = await response.text();
+          if (!response.ok) {
+            throw new Error("Erro ao buscar o status do servidor");
+          }
+          atualizarEstado(data);
+        } catch (error) {
+          console.error(error);
+        }
       }
       async function toggleLed(element) {
         element.checked ? await ligarLED() : await desligarLED();
       }
       async function ligarLED() {
-        const response = await fetch("/on");
-        const data = await response.text();
-        atualizarEstado(data);
+        try {
+          const response = await fetch("/on");
+          const data = await response.text();
+          if (!response.ok) {
+            throw new Error("Erro ao ligar o LED");
+          }
+          atualizarEstado(data);
+        } catch (error) {
+          console.error(error);
+        }
       }
       async function desligarLED() {
-        const response = await fetch("/off");
-        const data = await response.text();
-        atualizarEstado(data);
+        try {
+          const response = await fetch("/off");
+          const data = await response.text();
+          if (!response.ok) {
+            throw new Error("Erro ao desligar o LED");
+          }
+          atualizarEstado(data);
+        } catch (error) {
+          console.error(error);
+        }
       }
       atualizarStatus();
     </script>
