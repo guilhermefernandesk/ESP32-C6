@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Server ESP32</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" />
+    <style>
+      :root {
+        --white-color: #fff;
+        --primary-color: #002a5a;
+        --secondary-color: #0053b2;
+        --tertiary-color: #63afdd;
+        --footer-color: #192e40;
+        --background-color: #e3edf7;
+        --site-max-width: 1300px;
+        --font-size-l: 1.5rem;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Montserrat", sans-serif;
+      }
+      a {
+        text-decoration: none;
+      }
+      .section-content {
+        max-width: var(--site-max-width);
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      header {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        gap: 10px;
+      }
+      .footer-section {
+        background-color: var(--footer-color);
+        color: var(--white-color);
+        padding: 20px 0;
+      }
+      .footer-section .section-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .footer-section :where(.copyright-text, .social-link, .dev-link) {
+        color: var(--white-color);
+      }
+      .footer-section .social-link-list {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-section .social-link-list .social-link {
+        font-size: var(--font-size-l);
+      }
+      @media screen and (max-width: 768px) {
+        .footer-section .section-content {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="https://embarcados.com.br/wp-content/uploads/2020/02/logo-238x76-1.png.webp" alt="logo_embarcados" />
+      <h1>ESP32-C6 Web Server</h1>
+    </header>
+    <main>
+      <section class="section-content">
+        <!-- CARD LED -->
+        <div class="card card-switch" id="cardLED18">
+          <p>
+            <i class="fas fa-lightbulb fa-2x ledOff" id="iconLED18"></i>
+            <strong>(LED) 18</strong>
+          </p>
+          <p>GPIO state: <strong id="estadoLED18">OFF</strong></p>
+          <label class="switch">
+            <input type="checkbox" onchange="toggleLed(18, this)" id="led18" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+    </main>
+    <footer class="footer-section">
+      <div class="section-content">
+        <p class="copyright-text">&copy; Embarcados - Todos os direitos reservados</p>
+        <div class="social-link-list">
+          <a href="https://www.linkedin.com/company/embarcados" class="social-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+          <a href="https://www.instagram.com/portalembarcados" class="social-link">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+        </div>
+        <p class="dev-text">
+          <a href="https://www.linkedin.com/in/iguilherme" class="dev-link">Desenvolvido por Guilherme Fernandes</a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      function atualizarEstado(estado) {
+        const estadoLED = document.getElementById("estadoLED18");
+        const iconLED = document.getElementById("iconLED18");
+        estadoLED.innerText = estado ? "ON" : "OFF";
+        iconLED.classList.remove("ledOff", "ledOn");
+        iconLED.classList.add(estado === "on" ? "ledOn" : "ledOff");
+        document.getElementById("led18").checked = estado === "on";
+      }
+      async function atualizarStatus() {
+        const response = await fetch("/status");
+        const data = await response.text();
+        atualizarEstado(data);
+      }
+      async function toggleLed(element) {
+        element.checked ? await ligarLED() : await desligarLED();
+      }
+      async function ligarLED() {
+        const response = await fetch("/on");
+        const data = await response.text();
+        atualizarEstado(data);
+      }
+      async function desligarLED() {
+        const response = await fetch("/off");
+        const data = await response.text();
+        atualizarEstado(data);
+      }
+      atualizarStatus();
+    </script>
+  </body>
+</html>
