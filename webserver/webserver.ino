@@ -8,8 +8,8 @@ const uint8_t BUTTON_PIN = 19;  // Define o pino do botão
 bool statusLED = LOW;           // Status do LED  (LOW = Desligado / HIGH = Ligado)
 
 // Credenciais de rede WiFi
-const char* ssid     = "Franzininho";
-const char* password = "88891711";
+const char* ssid     = "****";
+const char* password = "****";
 
 WebServer server(80);
 

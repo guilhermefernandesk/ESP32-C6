@@ -204,41 +204,41 @@
           </div>
 
           <!-- Temperatura -->
-          <div class="card temp-umid-card">
+          <!-- <div class="card temp-umid-card">
             <p>
               <i class="fas fa-thermometer-half fa-2x"></i>
               <strong class="title">Temperatura</strong>
             </p>
             <p class="title"><span>Carregando...</span>°C</p>
-          </div>
+          </div> -->
 
           <!-- Umidade -->
-          <div class="card temp-umid-card">
+          <!-- <div class="card temp-umid-card">
             <p>
               <i class="fas fa-water fa-2x"></i>
               <strong class="title">Umidade</strong>
             </p>
             <p class="title"><span>Carregando...</span>%</p>
-          </div>
+          </div> -->
 
           <!-- Luz (LDR) -->
-          <div class="card light-card">
+          <!-- <div class="card light-card">
             <p>
               <i class="fas fa-sun fa-2x"></i>
               <strong class="title">Luz</strong>
             </p>
             <p class="title"><span>Carregando...</span></p>
-          </div>
+          </div> -->
 
           <!-- PWM -->
-          <div class="card light-card">
+          <!-- <div class="card light-card">
             <p>
               <i class="fas fa-sun fa-2x"></i>
               <strong class="title">PWM</strong>
             </p>
             <input type="range" id="pwmSlider" min="0" max="255" value="0" oninput="setPWM(this.value)" />
             <p class="title"><span id="pwmValue">0</span></p>
-          </div>
+          </div> -->
         </div>
       </section>
     </main>
@@ -266,7 +266,7 @@
       function atualizarEstado(estado) {
         const estadoLED = document.getElementById("estadoLED18");
         const iconLED = document.getElementById("iconLED18");
-        estadoLED.innerText = estado ? "ON" : "OFF";
+        estadoLED.innerText = estado == "on" ? "ON" : "OFF";
         iconLED.classList.remove("ledOff", "ledOn");
         iconLED.classList.add(estado === "on" ? "ledOn" : "ledOff");
         document.getElementById("led18").checked = estado === "on";
