@@ -2,7 +2,6 @@
     Placa Franzininho WiFi Lab01
 */
 
-
 #include "button.h"
 
 //Definições de perifericos externos da placa
