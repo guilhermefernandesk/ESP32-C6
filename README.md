@@ -10,12 +10,14 @@ A série tem como objetivo explorar os recursos e diferenciais do **ESP32-C6 Dev
 
 Cada diretório representa um projeto relacionado a um artigo específico da série:
 
+```
 ESP32-C6/
 ├── button # Biblioteca manipulação de botões
 ├── espNow # Comunicação ESP-NOW entre dois esp32
 ├── ntpServer # Atualização do relógio via NTP Server
 ├── webServer # Webserver com HTML/CSS e controle de GPIOs
 └── ...
+```
 
 > ⚠️ Os nomes das pastas estão sujeitos a atualização conforme novos artigos são publicados.
 
