@@ -209,41 +209,41 @@ const char index_html[] PROGMEM = R"rawliteral(
           </div>
 
           <!-- Temperatura -->
-          <!-- <div class="card temp-umid-card">
+          <div class="card temp-umid-card">
             <p>
               <i class="fas fa-thermometer-half fa-2x"></i>
               <strong class="title">Temperatura</strong>
             </p>
             <p class="title"><span>Carregando...</span>°C</p>
-          </div> -->
+          </div>
 
           <!-- Umidade -->
-          <!-- <div class="card temp-umid-card">
+          <div class="card temp-umid-card">
             <p>
               <i class="fas fa-water fa-2x"></i>
               <strong class="title">Umidade</strong>
             </p>
             <p class="title"><span>Carregando...</span>%</p>
-          </div> -->
+          </div>
 
           <!-- Luz (LDR) -->
-          <!-- <div class="card light-card">
+          <div class="card light-card">
             <p>
               <i class="fas fa-sun fa-2x"></i>
               <strong class="title">Luz</strong>
             </p>
             <p class="title"><span>Carregando...</span></p>
-          </div> -->
+          </div>
 
           <!-- PWM -->
-          <!-- <div class="card light-card">
+          <div class="card light-card">
             <p>
               <i class="fas fa-sun fa-2x"></i>
               <strong class="title">PWM</strong>
             </p>
-            <input type="range" id="pwmSlider" min="0" max="255" value="0" oninput="setPWM(this.value)" />
+            <input type="range" id="pwmSlider" min="0" max="255" value="0" onchange="setPWM(this.value)" oninput="atualizarPWM(this.value)" />
             <p class="title"><span id="pwmValue">0</span></p>
-          </div> -->
+          </div>
         </div>
       </section>
     </main>
@@ -271,8 +271,41 @@ const char index_html[] PROGMEM = R"rawliteral(
       websocket.onerror = (error) => console.log("error");
       websocket.onmessage = (event) => {
         console.log("Message received: " + event.data);
-        atualizarEstado(event.data);
+        const partes = event.data.split(";");
+        partes.forEach((p) => {
+          const [key, val] = p.split("=");
+          switch (key) {
+            case "LED":
+              console.log("LED state: " + val);
+              atualizarEstado(val);
+              break;
+            case "TEMP":
+              document.querySelector(".temp-umid-card span").innerText = val;
+              break;
+            case "UMID":
+              document.querySelectorAll(".temp-umid-card span")[1].innerText = val;
+              break;
+            case "LDR":
+              document.querySelector(".light-card span").innerText = val;
+              break;
+            case "PWM":
+              document.getElementById("pwmValue").innerText = val;
+              document.getElementById("pwmSlider").value = val;
+              break;
+          }
+        });
       };
+      function atualizarPWM(val) {
+        document.getElementById("pwmValue").innerText = val;
+      }
+      function setPWM(val) {
+        if (websocket && websocket.readyState === WebSocket.OPEN) {
+          websocket.send("PWM=" + val);
+          console.log("PWM enviado: " + val);
+        } else {
+          console.warn("WebSocket não conectado");
+        }
+      }
       function toggleLed(element) {
         if (websocket && websocket.readyState === WebSocket.OPEN) {
           const comando = element.checked ? "on" : "off";
@@ -295,5 +328,4 @@ const char index_html[] PROGMEM = R"rawliteral(
     </script>
   </body>
 </html>
-
 )rawliteral";
