@@ -130,5 +130,7 @@ void loop() {
   if (btn.wasPressed()) {
     handleButtonPress(); // Chama a função para lidar com o pressionamento do botão
   }
+  // Limpa conexões WebSocket desconectadas
+  ws.cleanupClients();
   delay(10); // Pequena pausa para evitar sobrecarga do loop
 }
