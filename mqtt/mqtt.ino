@@ -13,10 +13,7 @@
 
 #include <WiFi.h>               // Inclui a biblioteca para Wi-Fi
 #include <PubSubClient.h>       // Inclui a biblioteca para MQTT
-#include "credentials.h"        // Inclui as credenciais Wi-Fi
 #include <button.h>             // Inclui a biblioteca para manipulação de botões
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include <ESPAsyncWebServer.h>  // Inclui a biblioteca para servidor web assíncrono
 #include <AsyncTCP.h>           // Inclui a biblioteca para TCP assíncrono
 #include "html_page.h"          // Inclui o arquivo HTML que contém a página web
@@ -30,6 +27,7 @@
 #define broker_default "broker.emqx.io" // Endereço do Broker MQTT - Se desejar utilizar outro, substitua este pelo endereço do seu broker
 #define mqtt_tcp_port_default 1883      // Porta do Broker MQTT TCP
 #define mqtt_ws_port_default 8084       // Porta do Broker MQTT WebSocket
+#define id_mqtt "esp32c6_guilherme"     // ID do cliente MQTT - Pode ser alterado, mas deve ser único para cada cliente conectado ao broker
 
 // Mapeamento dos pinos
 const uint8_t LED_PIN = LED_VERMELHO;  
@@ -45,15 +43,16 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
 // Configuração Wi-Fi
-const char* ssid = SSID;          // SSID da rede Wi-Fi substituir pelo SSID da sua rede
-const char* password = PASSWORD;  // Senha da rede Wi-Fi substituir pela senha da sua rede
+const char* ssid = "*****";       // SSID da rede Wi-Fi substituir pelo SSID da sua rede
+const char* password = "******";  // Senha da rede Wi-Fi substituir pela senha da sua rede
 
 // Definição dos Tópicos MQTT
 const char* topic_led_vermelho = topic_led;
 
 // Configuração do Broker MQTT
-String mqtt_server = broker_default;
 const int mqtt_port = mqtt_tcp_port_default;
+const char* idMqtt = id_mqtt;
+String mqtt_server = broker_default;
 int mqtt_ws_port = mqtt_ws_port_default;
 
 // Variável para armazenar o estado do LED
@@ -105,8 +104,8 @@ void connectMQTT() {
     Serial.println("Conectando ao broker: " + mqtt_server + ":" + String(mqtt_port));
     mqtt.setServer(mqtt_server.c_str(), mqtt_port); 
 
-    if (mqtt.connect("esp32c6_guilherme")) {  
-      Serial.println("Conectado!");                                  
+    if (mqtt.connect(idMqtt)) {
+      Serial.println("Conectado!");
 
       // Assinar os tópicos dos LEDs
       mqtt.subscribe(topic_led_vermelho);
@@ -183,7 +182,7 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
 }
 
 /*-------------------------------------------------------------------------------
-  Tarefa para ler o estado do botão e enviar para a fila
+  Tarefa para ler o estado do botão e publicar a mensagem no tópico MQTT
  *---------------------------------------------------------------------------*/
 void taskBotao(void* parameter) {
   for (;;) {
