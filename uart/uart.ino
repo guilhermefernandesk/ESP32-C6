@@ -21,7 +21,6 @@ void setup() {
 #else
   Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE, SERIAL_8N1, RX_PIN, TX_PIN);
-
 #endif
 }
 
@@ -42,14 +41,13 @@ void loop() {
 #endif
     } else if ((endTime - startTime) > 3000) {  // botao pressionado por 3 segundos
 #ifdef BIT_BANGING
-      uart_send_byte('A');  // Envia caractere 'A' (0x41) - (0b01000001)
+      uartSendByte(0x41);  // Envia caractere 'A' (0x41) - (0b01000001)
 #else
       Serial1.write(0x41);             // Envia caractere 'A' (0x41) - (0b01000001)
 #endif
     }
   }
-
-#ifdef !BIT_BANGING
+#ifndef BIT_BANGING
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
     Serial.print("Do Monitor Serial: ");

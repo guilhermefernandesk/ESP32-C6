@@ -12,8 +12,9 @@
 #define BIT_DURATION (1000000 / BAUD_RATE)  // Duração do bit em microssegundos. (1 / 9600s) * 1.000.000 us/s ~= 104us
 
 const int MAX_MSG = 64;
-char buffer[MAX_MSG + 1];
+char buffer[MAX_MSG + 1];  // garante espaço para \0
 int buf_idx = 0;
+int MAX_WAIT_TIME = 10;  // tempo de aguardo para saber que encerrou
 
 void setup() {
   Serial.begin(BAUD_RATE);
@@ -26,16 +27,18 @@ void setup() {
 
 void loop() {
 #ifdef BIT_BANGING
+  static unsigned long startTime = 0;
   // Verifica se um start bit (transição de HIGH para LOW) foi detectado
   if (digitalRead(RX_PIN) == LOW) {
     char dado = uartReceiveByte();
-
-    // armazena no buffer até max ou até encontrar '\n'
+    // armazena no buffer até max ou tempo de espera encerrar
     if (buf_idx < MAX_MSG) {
       buffer[buf_idx++] = dado;
+      startTime = millis();
     }
-    // ao receber newline ou buffer cheio, finaliza string
-    if (dado == '\n' || buf_idx == MAX_MSG) {
+  }
+  if ((millis() - startTime > MAX_WAIT_TIME) || buf_idx == MAX_MSG) {
+    if (buf_idx > 0) {
       buffer[buf_idx] = '\0';  // termino da string
       Serial.print("Recebido: ");
       Serial.println(buffer);
