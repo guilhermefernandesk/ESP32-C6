@@ -85,15 +85,3 @@ void uartSendString(const char* str) {
     delayMicroseconds(BIT_DURATION);
   }
 }
-
-char uartReceiveByte() {
-  delayMicroseconds(BIT_DURATION + BIT_DURATION / 2);  // move para meio do primeiro bit de dados
-  uint8_t dado = 0;
-  for (int i = 0; i < 8; i++) {
-    dado |= (digitalRead(RX_PIN) << i);
-    delayMicroseconds(BIT_DURATION);
-  }
-  // stop bit
-  delayMicroseconds(BIT_DURATION);
-  return (char)dado;
-}
