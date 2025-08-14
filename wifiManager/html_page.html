@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Server ESP32</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" />
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+      :root {
+        --white-color: #fff;
+        --primary-color: #002a5a;
+        --footer-color: #192e40;
+        --site-max-width: 1300px;
+        --font-size-l: 1.5rem;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Montserrat", sans-serif;
+      }
+      html,
+      body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      main {
+        flex: 1;
+      }
+      a {
+        text-decoration: none;
+      }
+      .section-content {
+        max-width: var(--site-max-width);
+        margin: 0 auto;
+        padding: 0rem 2rem;
+      }
+      header {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        gap: 10px;
+        text-align: center;
+      }
+      .section-content .mqtt-container {
+        margin-top: 2rem;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .section-content .mqtt-container input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      .section-content .mqtt-container button {
+        padding: 10px;
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .section-content .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 30px;
+        padding: 2rem 0;
+      }
+      .section-content .grid-container .card {
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 80px;
+        height: 40px;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+        border-radius: 40px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 30px;
+        width: 30px;
+        left: 8px;
+        bottom: 5px;
+        background-color: #fff;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+        border-radius: 40px;
+      }
+      input:checked + .slider {
+        background-color: var(--primary-color);
+      }
+      input:checked + .slider:before {
+        -webkit-transform: translateX(30px);
+        -ms-transform: translateX(30px);
+        transform: translateX(30px);
+      }
+      .title {
+        font-size: var(--font-size-l);
+        font-weight: bold;
+      }
+      .ledOn {
+        color: green;
+      }
+      .ledOff {
+        color: red;
+      }
+      .footer-section {
+        background-color: var(--footer-color);
+        color: var(--white-color);
+        padding: 20px 0;
+      }
+      .footer-section .section-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .footer-section :where(.copyright-text, .social-link, .dev-link) {
+        color: var(--white-color);
+      }
+      .footer-section .social-link-list {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-section .social-link-list .social-link {
+        font-size: var(--font-size-l);
+      }
+      @media screen and (max-width: 820px) {
+        .footer-section .section-content {
+          flex-direction: column;
+          gap: 10px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="https://embarcados.com.br/wp-content/uploads/2020/02/logo-238x76-1.png.webp" alt="logo_embarcados" />
+      <h1>ESP32-C6 Web Server</h1>
+    </header>
+    <main>
+      <!-- Seção MQTT -->
+      <section class="section-content">
+        <div class="mqtt-container">
+          <h1>Configurações MQTT</h1>
+          <p>Status: <strong id="status">Conectando...</strong></p>
+          <input type="text" id="mqtt_server" placeholder="Broker MQTT (ex: broker.emqx.io)" />
+          <input type="number" id="mqtt_port" placeholder="Porta WebSocket MQTT (ex: 8084)" />
+          <button id="connectButton" onclick="salvarConfiguracoes()">
+            <h1>Salvar</h1>
+          </button>
+        </div>
+      </section>
+      <!-- Seção Cards -->
+      <section class="section-content">
+        <div class="grid-container">
+          <!-- CARD LED -->
+          <div class="card">
+            <p>
+              <i class="fas fa-lightbulb fa-2x ledOff" id="iconLED18"></i>
+              <strong class="title">(LED) 18</strong>
+            </p>
+            <p>GPIO state: <strong id="estadoLED18">Carregando...</strong></p>
+            <label class="switch">
+              <input type="checkbox" onchange="toggleLed(this)" id="led18" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer-section">
+      <div class="section-content">
+        <p class="copyright-text">&copy; Embarcados - Todos os direitos reservados</p>
+        <div class="social-link-list">
+          <a href="https://www.linkedin.com/company/embarcados" class="social-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+          <a href="https://www.instagram.com/portalembarcados" class="social-link">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+        </div>
+        <p class="dev-text">
+          <a href="https://www.linkedin.com/in/iguilherme" class="dev-link">Desenvolvido por Guilherme Fernandes</a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      let mqtt_server;
+      let mqtt_port;
+      let mqttClient;
+      let topic_led_vermelho;
+
+      async function salvarConfiguracoes() {
+        try {
+          mqtt_server = document.getElementById("mqtt_server").value;
+          mqtt_port = document.getElementById("mqtt_port").value;
+
+          if (!mqtt_server || !mqtt_port) {
+            alert("Por favor, preencha o Broker MQTT e a Porta WebSocket MQTT.");
+            return;
+          }
+
+          const response = await fetch("/save", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `mqttServer=${mqtt_server}`,
+          });
+
+          const data = await response.text();
+          if (!response.ok) {
+            throw new Error("Erro ao enviar comando ao servidor");
+          }
+          console.log("Configurações salvas");
+          iniciarClienteMQTT();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function toggleLed(element) {
+        const comando = element.checked ? "ON" : "OFF";
+        mqttClient.publish(topic_led_vermelho, comando);
+      }
+
+      function atualizarEstado(estado) {
+        const estadoLED = document.getElementById("estadoLED18");
+        const iconLED = document.getElementById("iconLED18");
+
+        estadoLED.innerText = estado == "ON" ? "ON" : "OFF";
+        iconLED.classList.remove("ledOff", "ledOn");
+        iconLED.classList.add(estado === "ON" ? "ledOn" : "ledOff");
+
+        document.getElementById("led18").checked = estado === "ON";
+      }
+
+      function iniciarClienteMQTT() {
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.end(); // desconecta se já estava conectado
+        }
+
+        mqttClient = mqtt.connect(`wss://${mqtt_server}:${mqtt_port}/mqtt`);
+
+        mqttClient.on("connect", () => {
+          document.getElementById("status").textContent = "Conectado!";
+          mqttClient.subscribe(topic_led_vermelho);
+        });
+
+        mqttClient.on("message", (topic, message) => {
+          console.log(`Mensagem: ${message.toString()} do tópico: ${topic}`);
+          if (topic === topic_led_vermelho) {
+            atualizarEstado(message.toString());
+          }
+        });
+      }
+
+      async function atualizarStatus() {
+        try {
+          const response = await fetch("/status");
+          const data = await response.text();
+          if (!response.ok) {
+            throw new Error("Erro ao buscar o status do servidor");
+          }
+          const partes = data.split(";");
+          partes.forEach((p) => {
+            const [key, val] = p.split("=");
+            switch (key) {
+              case "LED":
+                console.log("LED state: " + val);
+                atualizarEstado(val);
+                break;
+              case "mqttServer":
+                mqtt_server = val;
+                break;
+              case "mqttPort":
+                mqtt_port = val;
+                break;
+              case "topic":
+                topic_led_vermelho = val;
+                break;
+            }
+          });
+          // Só conecta ao MQTT após as variáveis estarem definidas
+          if (mqtt_server && mqtt_port) {
+            iniciarClienteMQTT();
+          }
+          // atualizarEstado(data);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      atualizarStatus();
+    </script>
+  </body>
+</html>
