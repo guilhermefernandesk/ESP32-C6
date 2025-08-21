@@ -65,7 +65,12 @@ void setup() {
 
   // Configuração do NTP Server e sincronização de tempo
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-  
+  // Aguarda até conseguir pegar o tempo
+  struct tm timeinfo;
+  while (!getLocalTime(&timeinfo)) {
+    Serial.println("Aguardando tempo via NTP...");
+    delay(2000);
+  }
   // Desconecta do WiFi após obter o horário
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
