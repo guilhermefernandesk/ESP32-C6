@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Server ESP32</title>
+    <!-- Linking Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header / Navbar -->
+    <header>
+      <img src="https://embarcados.com.br/wp-content/uploads/2020/02/logo-238x76-1.png.webp" alt="logo_embarcados" />
+      <h1>ESP32-C6 Web Server</h1>
+    </header>
+    <!-- Main Content -->
+    <main>
+      <!-- Hero section -->
+      <section class="section-content">
+        <div class="table-container">
+          <h1 class="title">Tabela de Sensores</h1>
+          <table id="sensorTable">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>device_id</th>
+                <th>sensor</th>
+                <th>location</th>
+                <th>value1</th>
+                <th>value2</th>
+                <th>reading_time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- dados virão aqui -->
+            </tbody>
+          </table>
+          <div style="text-align: center; margin: 20px">
+            <button id="prev">Anterior</button>
+            <button id="next">Próximo</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer section -->
+    <footer class="footer-section">
+      <div class="section-content">
+        <p class="copyright-text">&copy; Embarcados - Todos os direitos reservados</p>
+        <div class="social-link-list">
+          <a href="https://www.linkedin.com/company/embarcados" class="social-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+          <a href="https://www.instagram.com/portalembarcados" class="social-link">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+        </div>
+        <p class="dev-text">
+          <a href="https://www.linkedin.com/in/iguilherme" class="dev-link">Desenvolvido por Guilherme Fernandes</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Linking custom script -->
+    <script src="script.js"></script>
+  </body>
+</html>

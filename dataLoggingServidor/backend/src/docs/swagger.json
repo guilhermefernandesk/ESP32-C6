@@ -1,0 +1,67 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Logging API",
+    "description": "API developed by Guilherme Fernandes for backend integration in the Data Logging project.",
+    "version": "1.0.0",
+    "contact": {
+      "email": "guilhermeferoliv@gmail.com"
+    }
+  },
+
+  "paths": {
+    "/sensor": {
+      "post": {
+        "summary": "Add Sensor Data",
+        "description": "Add new sensor data to the server.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "device_id": {
+                    "type": "string",
+                    "description": "ID of the device"
+                  },
+                  "sensor": {
+                    "type": "string",
+                    "description": "Nome do sensor"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "Location of the device"
+                  },
+                  "value1": {
+                    "type": "string",
+                    "description": "Value 1 recorded by the sensor"
+                  },
+                  "value2": {
+                    "type": "string",
+                    "description": "Value 2 recorded by the sensor"
+                  }
+                },
+                "required": ["device_id", "sensor", "location", "value1", "value2"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sensor data added successfully"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Sensor Data",
+        "description": "Retrieve sensor data from the server.",
+        "responses": {
+          "200": {
+            "description": "Sensor data retrieved successfully"
+          }
+        }
+      }
+    }
+  }
+}
