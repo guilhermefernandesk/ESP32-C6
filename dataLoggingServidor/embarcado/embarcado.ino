@@ -10,7 +10,7 @@ DHT dht(DHTPIN, DHTTYPE);   // Inicializa o sensor DHT
 // Credenciais de rede WiFi
 const char* ssid = SSID;
 const char* password = PASSWORD;
-String serverPath = API_URLs;   // "http://<IP_DO_SERVIDOR>:<PORTA>"
+String serverPath = API_URL;   // "http://<IP_DO_SERVIDOR>:<PORTA>"
 
 // Identificadores do dispositivo e sensor
 String deviceID = "esp32c6-01";
