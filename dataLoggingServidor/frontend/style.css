@@ -41,6 +41,10 @@ td {
 th {
   background-color: #f4f4f4;
 }
+canvas {
+  max-width: 100%;
+  height: 300px;
+}
 .section-content {
   max-width: var(--site-max-width);
   margin: 0 auto;
