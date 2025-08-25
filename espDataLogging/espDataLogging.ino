@@ -126,13 +126,13 @@ void setup() {
   // Inicializa o sensor DHT
   dht.begin();
 
-  // Set the callback for Google API access token generation status (for debug only)
+  // Configura o callback para o status de geração do token de acesso da API do Google (apenas para depuração)
   GSheet.setTokenCallback(tokenStatusCallback);
 
-  // Set the seconds to refresh the auth token before expire (60 to 3540, default is 300 seconds)
+  // Define os segundos para atualizar o token de autenticação antes de expirar (60 a 3540, o padrão é 300 segundos)
   GSheet.setPrerefreshSeconds(10 * 60);
 
-  // Begin the access token generation for Google API authentication
+  // Inicia a geração do token de acesso para autenticação da API do Google
   GSheet.begin(CLIENT_EMAIL, PROJECT_ID, PRIVATE_KEY);
 }
 
@@ -173,7 +173,7 @@ void loop() {
     valueRange.set("values/[1]/[3]", String(hum, 2));
 
     // For Google Sheet API ref doc, go to https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append
-    // Append values to the spreadsheet
+    // Adiciona os valores à planilha
     bool success = GSheet.values.append(&response, SPREADSHEET_ID, String(sheetName) + "!A2", &valueRange);
     if (success) {
       response.toString(Serial, true);
