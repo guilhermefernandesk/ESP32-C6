@@ -1,9 +1,8 @@
-import express from "express";
 import swaggerUI from "swagger-ui-express";
 import swaggerDocument from "./docs/swagger.json" with { type: "json" };
 import { sensorRouter } from "./routes/index.js";
+import express from "express";
 import cors from "cors";
-
 
 const app = express();
 const port = 3000;

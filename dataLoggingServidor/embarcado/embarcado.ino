@@ -1,18 +1,18 @@
-#include <WiFi.h>
-#include <HTTPClient.h>
+#include <WiFi.h>       // Inclui a biblioteca WiFi para conectar-se a redes sem fio
+#include <HTTPClient.h> // Inclui a biblioteca HTTPClient para fazer requisições HTTP
+#include "DHT.h"        // Inclui a biblioteca DHT para sensores de temperatura e umidade
 #include "credentials.h"
-#include "DHT.h"  // Inclui a biblioteca DHT para sensores de temperatura e umidade
 
 #define DHTTYPE DHT11       // Tipo de sensor DHT11
 const uint8_t DHTPIN = 18;  // Pino onde o sensor DHT está conectado
-
-DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHTPIN, DHTTYPE);   // Inicializa o sensor DHT
 
 // Credenciais de rede WiFi
 const char* ssid = SSID;
 const char* password = PASSWORD;
-String serverPath = API_URL;
+String serverPath = API_URLs;   // "http://<IP_DO_SERVIDOR>:<PORTA>"
 
+// Identificadores do dispositivo e sensor
 String deviceID = "esp32c6-01";
 String sensorName = "DHT11";
 String sensorLocation = "Casa";
@@ -40,7 +40,6 @@ void setup() {
 
   WiFi.mode(WIFI_STA);
   WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
-
   WiFi.disconnect(true);  // Desconecta de qualquer rede WiFi
   delay(1000);            // Aguarda 1 segundo
 
@@ -54,7 +53,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("\nnConectado");
+  Serial.println("\nConectado");
 
   // Inicializa o sensor DHT
   dht.begin();
@@ -71,11 +70,12 @@ void loop() {
   }
 
   if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
-    http.begin((serverPath + "/sensor").c_str());
-    http.addHeader("Content-Type", "application/json");
+    HTTPClient http; // Cria uma instância do cliente HTTP
+    http.begin((serverPath + "/sensor").c_str()); // Inicia a conexão com o servidor na rota
+    http.addHeader("Content-Type", "application/json"); // Adiciona o cabeçalho Content-Type
 
-  String payload = String(
+    // Cria o payload JSON
+    String payload = String(
                       "{\"device_id\":\"")
                     + deviceID 
                     + "\",\"sensor\":\"" + sensorName 
@@ -84,18 +84,14 @@ void loop() {
                     + "\",\"value2\":\"" + humidity + "\"}";
 
     int code = http.POST(payload);
-
     if (code != 201) {
       Serial.printf("Erro ao enviar dados: %s\n", http.errorToString(code).c_str());
     }
 
     Serial.println("Dados enviados com sucesso");
-
-
     String resp = http.getString();
     Serial.println(resp);
     http.end();
   }
-
   delay(5000);  // Aguarda 5 segundos antes de enviar novos dados
 }

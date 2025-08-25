@@ -2,7 +2,7 @@ const API_URL = "http://localhost:3000/sensor";
 
 async function loadData() {
   let currentPage = 1;
-  const limit = 50;
+  const limit = 15;
 
   try {
     const response = await fetch(`${API_URL}?page=${currentPage}&limit=${limit}`, {
