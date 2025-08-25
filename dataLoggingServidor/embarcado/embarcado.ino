@@ -85,7 +85,7 @@ void loop() {
 
     int code = http.POST(payload);
 
-    if (code != 200) {
+    if (code != 201) {
       Serial.printf("Erro ao enviar dados: %s\n", http.errorToString(code).c_str());
     }
 
