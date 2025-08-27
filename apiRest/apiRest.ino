@@ -78,7 +78,8 @@ void handleLed() {
     DeserializationError error = deserializeJson(doc, body);
 
     if (!error) {
-      setLED(doc["led"]);
+      int ledState = doc["led"];
+      setLED(ledState == 1 ? HIGH : LOW);
       server.send(200, "application/json", "{\"message\":\"LED atualizado\"}");
       return;
     }
