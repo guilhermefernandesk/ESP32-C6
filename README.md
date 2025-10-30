@@ -44,6 +44,7 @@ ESP32-C6/
 - [ESP32-C6 na Prática: Log de dados no Google Sheets](https://embarcados.com.br/esp32-c6-na-pratica-log-de-dados-no-google-sheets/)
 - [ESP32-C6 na Prática: Log de dados com Banco de Dados](https://embarcados.com.br/esp32-c6-na-pratica-log-de-dados-com-banco-de-dados/)
 - [ESP32-C6 na Prática: Consumindo a API do OpenWeatherMap com JSON](https://embarcados.com.br/esp32-c6-na-pratica-consumindo-a-api-do-openweathermap-com-json/)
+- [ESP32-C6 na Prática: Criando uma API REST e Arduino IDE](https://embarcados.com.br/esp32-c6-na-pratica-criando-uma-api-rest-e-arduino-ide/)
 - _(Outros artigos em breve...)_
 
 ## 📜 Licença
