@@ -31,6 +31,19 @@ ESP32-C6/
 
 - [Introdução à Placa ESP32-C6-DevKitC-1: Ideal para IoT](https://embarcados.com.br/introducao-a-placa-esp32-c6-devkitc-1-ideal-para-iot/)
 - [ESP32-C6 na Prática: Seu Primeiro “Hello World”](https://embarcados.com.br/esp32-c6-na-pratica-seu-primeiro-hello-world/)
+- [ESP32-C6 na Prática: Criando Web Server](https://embarcados.com.br/esp32-c6-na-pratica-criando-web-server/)
+- [ESP32-C6 na Prática: Criando um Web Server de Tempo Real](https://embarcados.com.br/esp32-c6-na-pratica-criando-um-web-server-de-tempo-real/)
+- [Criando uma Biblioteca de Botões para Arduino](https://embarcados.com.br/criando-uma-biblioteca-de-botoes-para-arduino/)
+- [ESP32-C6 na Prática: Sincronizando a Hora com NTP Server](https://embarcados.com.br/esp32-c6-na-pratica-sincronizando-a-hora-com-ntp-server/)
+- [ESP32-C6 na Prática: Comunicação Bidirecional sem Wi-Fi usando ESP-NOW](https://embarcados.com.br/esp32-c6-na-pratica-comunicacao-bidirecional-sem-wi-fi-usando-esp-now/)
+- [ESP32-C6 na Prática: Comunicação MQTT](https://embarcados.com.br/esp32-c6-na-pratica-comunicacao-mqtt/)
+- [ESP32-C6 na Prática: Usando o Telegram para controlar GPIOs](https://embarcados.com.br/esp32-c6-na-pratica-usando-o-telegram-para-controlar-gpios/)
+- [ESP32-C6 na Prática: ESP RainMaker com Arduino IDE](https://embarcados.com.br/esp32-c6-na-pratica-esp-rainmaker-com-arduino-ide/)
+- [ESP32-C6 na Prática: WiFi Manager](https://embarcados.com.br/esp32-c6-na-pratica-wifi-manager/)
+- [ESP32-C6 na Prática: Provisionamento de Wi-Fi via Bluetooth Low Energy](https://embarcados.com.br/esp32-c6-na-pratica-provisionamento-de-wi-fi-via-bluetooth-low-energy/)
+- [ESP32-C6 na Prática: Log de dados no Google Sheets](https://embarcados.com.br/esp32-c6-na-pratica-log-de-dados-no-google-sheets/)
+- [ESP32-C6 na Prática: Log de dados com Banco de Dados](https://embarcados.com.br/esp32-c6-na-pratica-log-de-dados-com-banco-de-dados/)
+- [ESP32-C6 na Prática: Consumindo a API do OpenWeatherMap com JSON](https://embarcados.com.br/esp32-c6-na-pratica-consumindo-a-api-do-openweathermap-com-json/)
 - _(Outros artigos em breve...)_
 
 ## 📜 Licença
